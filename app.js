@@ -20,16 +20,21 @@ const errorHandlerMiddleware = require('./middleware/error-handler.js');
 
 app.use(morgan('tiny'));
 app.use(express.json());
+app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
-app.use(notFoundMiddleware);
-app.use(errorHandlerMiddleware);
-app.use(cookieParser(process.env.JWT_SECRET));
 
 app.get('/', (req, res) => {
   res.send('e-commerce api');
 });
+app.get('/api/v1', (req, res) => {
+  console.log(req.cookies);
+  res.send('e-commerce api');
+});
+app.use(notFoundMiddleware);
+app.use(errorHandlerMiddleware);
+
 const port = process.env.PORT || 5000;
 
 const start = async () => {
