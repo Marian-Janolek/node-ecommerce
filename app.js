@@ -6,6 +6,7 @@ const app = express();
 // rest of the packages
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 
 // database
 const connectDB = require('./db/connect.js');
@@ -13,6 +14,7 @@ const connectDB = require('./db/connect.js');
 // routers
 const authRouter = require('./routes/authRoutes.js');
 const userRouter = require('./routes/userRoutes');
+const productRouter = require('./routes/productRoutes');
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found.js');
@@ -22,8 +24,12 @@ app.use(morgan('tiny'));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
+app.use(express.static('./public'));
+app.use(fileUpload());
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/products', productRouter);
 
 app.get('/', (req, res) => {
   res.send('e-commerce api');
